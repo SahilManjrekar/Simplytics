@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraWise - Business Intelligence Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(44, 44, 75, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(140, 255, 236, 0.15);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: #8cffec;
+            opacity: 0.7;
+        }
+
+        .new-analysis-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(140, 255, 236, 0.1);
+            border: 1px solid #8cffec;
+            border-radius: 8px;
+            color: #8cffec;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .new-analysis-btn:hover {
+            background: rgba(140, 255, 236, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .dashboard-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, #fff, #8cffec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            color: #a0a0b0;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-icon {
+            font-size: 2rem;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #2c2c4b 0%, #252543 100%);
+            border-radius: 18px;
+            padding: 2rem;
+            border: 1px solid rgba(140, 255, 236, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8cffec, #5ad4e6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 45px rgba(140, 255, 236, 0.15);
+            border-color: rgba(140, 255, 236, 0.4);
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: #a0a0b0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #8cffec;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .kpi-change {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .kpi-change.positive {
+            color: #4ade80;
+        }
+
+        .kpi-change.negative {
+            color: #ff6b6b;
+        }
+
+        /* Key Findings */
+        .findings-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .finding-card {
+            background: #2c2c4b;
+            border-left: 5px solid #8cffec;
+            padding: 1.8rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .finding-card:hover {
+            background: #323252;
+            transform: translateX(8px);
+            box-shadow: -5px 0 20px rgba(140, 255, 236, 0.1);
+        }
+
+        .finding-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #8cffec;
+            margin-bottom: 0.8rem;
+        }
+
+        .finding-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #d0d0d0;
+        }
+
+        /* Visualizations Section */
+        .visualizations-section {
+            background: #2c2c4b;
+            border-radius: 18px;
+            padding: 3rem;
+            border: 1px solid rgba(140, 255, 236, 0.15);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .viz-placeholder {
+            margin-bottom: 2rem;
+        }
+
+        .viz-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .viz-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.8rem;
+        }
+
+        .viz-subtitle {
+            font-size: 1rem;
+            color: #a0a0b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .generate-viz-btn {
+            padding: 1.3rem 3rem;
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-viz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(140, 255, 236, 0.4);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .loading-spinner {
+            width: 100px;
+            height: 100px;
+            border: 5px solid rgba(140, 255, 236, 0.1);
+            border-top: 5px solid #8cffec;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .loading-status {
+            font-size: 1rem;
+            color: #8cffec;
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-progress {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(140, 255, 236, 0.1);
+            height: 6px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8cffec, #5ad4e6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .charts-grid.active {
+            display: grid;
+        }
+
+        .chart-card {
+            background: #2c2c4b;
+            border-radius: 18px;
+            padding: 2rem;
+            border: 1px solid rgba(140, 255, 236, 0.15);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 8px 30px rgba(140, 255, 236, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .chart-container {
+            width: 100%;
+            min-height: 350px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Recommendations */
+        .recommendations-list {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .recommendation-item {
+            background: linear-gradient(135deg, rgba(140, 255, 236, 0.08) 0%, rgba(140, 255, 236, 0.03) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(140, 255, 236, 0.2);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .recommendation-number {
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            color: #1a1a2e;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .recommendation-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #d0d0d0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .visualizations-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">AuraWise</div>
+                <div class="tagline">Automated Business Insights Platform</div>
+            </div>
+            <a href="index.html" class="new-analysis-btn">🔄 New Analysis</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Business Intelligence Report</h1>
+            <p class="dashboard-subtitle">Comprehensive insights generated from your dataset</p>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📈</span>
+                Executive Summary
+            </h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Revenue</div>
+                    <div class="kpi-value">$2,847,920</div>
+                    <div class="kpi-change positive">↑ 34.2% vs last quarter</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Average Order Value</div>
+                    <div class="kpi-value">$487.50</div>
+                    <div class="kpi-change positive">↑ 18.7% vs last quarter</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Customer Count</div>
+                    <div class="kpi-value">5,842</div>
+                    <div class="kpi-change positive">↑ 12.9% vs last quarter</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Retention Rate</div>
+                    <div class="kpi-value">82.4%</div>
+                    <div class="kpi-change negative">↓ 3.1% vs last quarter</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Monthly Growth</div>
+                    <div class="kpi-value">+$142K</div>
+                    <div class="kpi-change positive">↑ 27.5% momentum</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Profit Margin</div>
+                    <div class="kpi-value">38.6%</div>
+                    <div class="kpi-change positive">↑ 4.2% vs last quarter</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Findings -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="section-icon">💡</span>
+                Key Findings
+            </h2>
+            <div class="findings-grid">
+                <div class="finding-card">
+                    <div class="finding-title">🎯 High-Value Customer Concentration</div>
+                    <div class="finding-text">
+                        Your top 15% of customers generate 68% of total revenue ($1.94M). These premium customers have an average order value of $1,240 compared to $320 for regular customers. Focus retention strategies on this segment to protect your revenue base.
+                    </div>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-title">📅 Strong Seasonal Pattern Detected</div>
+                    <div class="finding-text">
+                        Revenue peaks consistently in Q4 (November-December) with a 45% increase over baseline. Historical data shows this pattern repeating for 3 consecutive years. Recommend increasing inventory 8-10 weeks prior and allocating 35% more marketing budget to Q4 campaigns.
+                    </div>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-title">⚠️ Churn Risk in Mid-Tier Segment</div>
+                    <div class="finding-text">
+                        847 customers (14.5% of base) showing declining engagement with 60% drop in purchase frequency over last 90 days. Estimated annual revenue at risk: $412K. Implement targeted win-back campaigns with personalized offers to prevent further attrition.
+                    </div>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-title">🚀 Product Category Opportunity</div>
+                    <div class="finding-text">
+                        "Premium Electronics" category shows 127% YoY growth with highest profit margins (42%). Cross-sell analysis reveals 73% of premium electronics buyers also purchase accessories within 30 days. Bundle strategy could increase AOV by estimated $180-220 per transaction.
+                    </div>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-title">🕐 Time-Based Purchasing Behavior</div>
+                    <div class="finding-text">
+                        Peak purchase times: Tuesday-Thursday between 2-4 PM (32% of daily transactions). Weekend mornings (Saturday 9-11 AM) show 18% higher conversion rates. Optimize email campaigns and flash sales timing to align with these high-intent windows.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualizations CTA -->
+        <div class="visualizations-section" id="vizPlaceholder">
+            <div class="viz-placeholder">
+                <div class="viz-icon">📊</div>
+                <h3 class="viz-title">Generate Data Visualizations</h3>
+                <p class="viz-subtitle">
+                    Create interactive charts and graphs to visualize revenue trends,<br>
+                    customer segmentation, product performance, and user behavior patterns
+                </p>
+            </div>
+            <button class="generate-viz-btn" id="generateVizBtn">
+                🎨 Generate Visualizations
+            </button>
+        </div>
+
+        <!-- Charts Section (Hidden Initially) -->
+        <div class="section">
+            <h2 class="section-title" id="vizSectionTitle" style="display: none;">
+                <span class="section-icon">📊</span>
+                Trend Analysis & Visualizations
+            </h2>
+            <div class="charts-grid" id="chartsGrid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Revenue Growth Trend (12 Months)</h3>
+                    <div class="chart-container">
+                        <svg class="chart-svg" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#8cffec;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#8cffec;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <line x1="50" y1="50" x2="50" y2="250" stroke="rgba(140, 255, 236, 0.2)" stroke-width="1"/>
+                            <line x1="50" y1="250" x2="450" y2="250" stroke="rgba(140, 255, 236, 0.2)" stroke-width="1"/>
+                            <line x1="50" y1="100" x2="450" y2="100" stroke="rgba(140, 255, 236, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+                            <line x1="50" y1="150" x2="450" y2="150" stroke="rgba(140, 255, 236, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+                            <line x1="50" y1="200" x2="450" y2="200" stroke="rgba(140, 255, 236, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+                            <path d="M 50 220 L 90 200 L 130 185 L 170 195 L 210 170 L 250 155 L 290 140 L 330 130 L 370 110 L 410 95 L 450 75 L 450 250 L 50 250 Z" fill="url(#grad1)"/>
+                            <path d="M 50 220 L 90 200 L 130 185 L 170 195 L 210 170 L 250 155 L 290 140 L 330 130 L 370 110 L 410 95 L 450 75" stroke="#8cffec" stroke-width="3" fill="none"/>
+                            <circle cx="50" cy="220" r="4" fill="#8cffec"/>
+                            <circle cx="130" cy="185" r="4" fill="#8cffec"/>
+                            <circle cx="210" cy="170" r="4" fill="#8cffec"/>
+                            <circle cx="290" cy="140" r="4" fill="#8cffec"/>
+                            <circle cx="370" cy="110" r="4" fill="#8cffec"/>
+                            <circle cx="450" cy="75" r="5" fill="#5ad4e6"/>
+                            <text x="40" y="260" fill="#a0a0b0" font-size="10">Jan</text>
+                            <text x="120" y="260" fill="#a0a0b0" font-size="10">Mar</text>
+                            <text x="200" y="260" fill="#a0a0b0" font-size="10">May</text>
+                            <text x="280" y="260" fill="#a0a0b0" font-size="10">Jul</text>
+                            <text x="360" y="260" fill="#a0a0b0" font-size="10">Sep</text>
+                            <text x="440" y="260" fill="#a0a0b0" font-size="10">Nov</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Customer Segmentation</h3>
+                    <div class="chart-container">
+                        <svg class="chart-svg" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="translate(250, 150)">
+                                <path d="M 0,-90 A 90,90 0 0,1 77.9,-45 L 0,0 Z" fill="#8cffec" opacity="0.9"/>
+                                <text x="35" y="-60" fill="#fff" font-size="14" font-weight="700">35%</text>
+                                <text x="20" y="-45" fill="#fff" font-size="10">Premium</text>
+                                <path d="M 77.9,-45 A 90,90 0 0,1 45,77.9 L 0,0 Z" fill="#5ad4e6" opacity="0.8"/>
+                                <text x="60" y="20" fill="#fff" font-size="14" font-weight="700">42%</text>
+                                <text x="48" y="35" fill="#fff" font-size="10">Regular</text>
+                                <path d="M 45,77.9 A 90,90 0 0,1 0,-90 L 0,0 Z" fill="#4ade80" opacity="0.7"/>
+                                <text x="-55" y="10" fill="#fff" font-size="14" font-weight="700">23%</text>
+                                <text x="-65" y="25" fill="#fff" font-size="10">Occasional</text>
+                            </g>
+                            <g transform="translate(380, 100)">
+                                <rect x="0" y="0" width="12" height="12" fill="#8cffec" rx="2"/>
+                                <text x="18" y="10" fill="#e0e0e0" font-size="11">Premium</text>
+                                <rect x="0" y="25" width="12" height="12" fill="#5ad4e6" rx="2"/>
+                                <text x="18" y="35" fill="#e0e0e0" font-size="11">Regular</text>
+                                <rect x="0" y="50" width="12" height="12" fill="#4ade80" rx="2"/>
+                                <text x="18" y="60" fill="#e0e0e0" font-size="11">Occasional</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Product Category Performance</h3>
+                    <div class="chart-container">
+                        <svg class="chart-svg" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="translate(80, 250)">
+                                <rect x="0" y="-180" width="60" height="180" fill="#8cffec" rx="4"/>
+                                <text x="30" y="-190" fill="#8cffec" font-size="12" font-weight="700" text-anchor="middle">$1.2M</text>
+                                <text x="30" y="20" fill="#a0a0b0" font-size="11" text-anchor="middle">Electronics</text>
+                                <rect x="80" y="-140" width="60" height="140" fill="#5ad4e6" rx="4"/>
+                                <text x="110" y="-150" fill="#5ad4e6" font-size="12" font-weight="700" text-anchor="middle">$840K</text>
+                                <text x="110" y="20" fill="#a0a0b0" font-size="11" text-anchor="middle">Apparel</text>
+                                <rect x="160" y="-100" width="60" height="100" fill="#4ade80" rx="4"/>
+                                <text x="190" y="-110" fill="#4ade80" font-size="12" font-weight="700" text-anchor="middle">$520K</text>
+                                <text x="190" y="20" fill="#a0a0b0" font-size="11" text-anchor="middle">Home</text>
+                                <rect x="240" y="-75" width="60" height="75" fill="#c084fc" rx="4"/>
+                                <text x="270" y="-85" fill="#c084fc" font-size="12" font-weight="700" text-anchor="middle">$288K</text>
+                                <text x="270" y="20" fill="#a0a0b0" font-size="11" text-anchor="middle">Beauty</text>
+                            </g>
+                            <line x1="80" y1="70" x2="380" y2="70" stroke="rgba(140, 255, 236, 0.2)" stroke-width="1"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Monthly Active Users Trend</h3>
+                    <div class="chart-container">
+                        <svg class="chart-svg" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#5ad4e6;stop-opacity:0.4" />
+                                    <stop offset="100%" style="stop-color:#5ad4e6;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <line x1="50" y1="50" x2="50" y2="250" stroke="rgba(140, 255, 236, 0.2)" stroke-width="1"/>
+                            <line x1="50" y1="250" x2="450" y2="250" stroke="rgba(140, 255, 236, 0.2)" stroke-width="1"/>
+                            <path d="M 50 180 L 100 170 L 150 165 L 200 160 L 250 145 L 300 135 L 350 125 L 400 115 L 450 100" stroke="#5ad4e6" stroke-width="3" fill="none"/>
+                            <circle cx="50" cy="180" r="4" fill="#5ad4e6"/>
+                            <circle cx="150" cy="165" r="4" fill="#5ad4e6"/>
+                            <circle cx="250" cy="145" r="4" fill="#5ad4e6"/>
+                            <circle cx="350" cy="125" r="4" fill="#5ad4e6"/>
+                            <circle cx="450" cy="100" r="5" fill="#8cffec"/>
+                            <text x="35" y="260" fill="#a0a0b0" font-size="10">Q1</text>
+                            <text x="145" y="260" fill="#a0a0b0" font-size="10">Q2</text>
+                            <text x="245" y="260" fill="#a0a0b0" font-size="10">Q3</text>
+                            <text x="345" y="260" fill="#a0a0b0" font-size="10">Q4</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                Strategic Recommendations
+            </h2>
+            <div class="recommendations-list">
+                <div class="recommendation-item">
+                    <div class="recommendation-number">1</div>
+                    <div class="recommendation-text">
+                        <strong>Implement VIP Loyalty Program:</strong> Create a tiered rewards program for your top 15% customers who generate 68% of revenue. Offer exclusive early access to new products, personalized discounts, and dedicated support. Estimated impact: 15-20% increase in customer lifetime value ($290K-$390K additional annual revenue).
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-number">2</div>
+                    <div class="recommendation-text">
+                        <strong>Q4 Preparation Strategy:</strong> Based on consistent 45% revenue spike in Q4, begin inventory buildup by early September. Allocate additional $125K to marketing budget for October-November campaigns. Launch pre-holiday campaigns 6-8 weeks before peak season to capture early shoppers.
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-number">3</div>
+                    <div class="recommendation-text">
+                        <strong>Win-Back Campaign for At-Risk Customers:</strong> Deploy targeted email campaigns with personalized 15-20% discount offers to 847 declining customers. Use dynamic product recommendations based on purchase history. Expected recovery: 30-35% of at-risk segment ($124K-$144K protected revenue).
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-number">4</div>
+                    <div class="recommendation-text">
+                        <strong>Bundle Strategy for Premium Electronics:</strong> Create curated product bundles combining high-margin electronics with accessories. Offer 10% bundle discount to incentivize larger transactions. Target cross-sell opportunities within 30-day purchase window. Projected AOV increase: $180-$220 per bundled transaction.
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-number">5</div>
+                    <div class="recommendation-text">
+                        <strong>Optimize Campaign Timing:</strong> Schedule promotional emails and flash sales for Tuesday-Thursday 2-4 PM and Saturday mornings 9-11 AM based on peak engagement windows. A/B test subject lines and offers during these high-conversion periods. Expected improvement: 22-28% increase in email campaign ROI.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay for Chart Generation -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 class="loading-text">Generating Visualizations</h2>
+            <p class="loading-status" id="vizLoadingStatus">Initializing chart engine...</p>
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="vizProgressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const generateVizBtn = document.getElementById('generateVizBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const vizLoadingStatus = document.getElementById('vizLoadingStatus');
+        const vizProgressBar = document.getElementById('vizProgressBar');
+        const chartsGrid = document.getElementById('chartsGrid');
+        const vizPlaceholder = document.getElementById('vizPlaceholder');
+        const vizSectionTitle = document.getElementById('vizSectionTitle');
+
+        const vizStatuses = [
+            { text: 'Initializing chart engine...', time: 0 },
+            { text: 'Processing revenue data points...', time: 2000 },
+            { text: 'Generating revenue growth trend...', time: 4000 },
+            { text: 'Calculating customer segments...', time: 6000 },
+            { text: 'Creating segmentation visualization...', time: 8000 },
+            { text: 'Analyzing product performance...', time: 10000 },
+            { text: 'Building category charts...', time: 12000 },
+            { text: 'Compiling user behavior patterns...', time: 14000 },
+            { text: 'Finalizing visualizations...', time: 16000 }
+        ];
+
+        generateVizBtn.addEventListener('click', function() {
+            // Show loading overlay
+            loadingOverlay.classList.add('active');
+            
+            let progress = 0;
+            const totalDuration = 18000; // 18 seconds
+            const updateInterval = 100;
+            const progressStep = (updateInterval / totalDuration) * 100;
+            
+            // Update progress bar
+            const progressInterval = setInterval(() => {
+                progress += progressStep;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                }
+                vizProgressBar.style.width = progress + '%';
+            }, updateInterval);
+            
+            // Update status messages
+            vizStatuses.forEach(status => {
+                setTimeout(() => {
+                    vizLoadingStatus.textContent = status.text;
+                }, status.time);
+            });
+            
+            // Show charts after loading completes
+            setTimeout(() => {
+                loadingOverlay.classList.remove('active');
+                vizPlaceholder.style.display = 'none';
+                vizSectionTitle.style.display = 'flex';
+                chartsGrid.classList.add('active');
+                
+                // Smooth scroll to charts
+                setTimeout(() => {
+                    vizSectionTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }, totalDuration);
+        });
+    </script>
+</body>
+</html> 100 170 L 150 165 L 200 160 L 250 145 L 300 135 L 350 125 L 400 115 L 450 100 L 450 250 L 50 250 Z" fill="url(#grad3)"/>
+                            <path d="M 50 180 L

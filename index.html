@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraWise - Upload Dataset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(44, 44, 75, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(140, 255, 236, 0.15);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: #8cffec;
+            opacity: 0.7;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Upload Container */
+        .upload-container {
+            background: #2c2c4b;
+            border: 2px dashed rgba(140, 255, 236, 0.3);
+            border-radius: 24px;
+            padding: 4rem 3rem;
+            text-align: center;
+            max-width: 650px;
+            width: 100%;
+            transition: all 0.4s ease;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-container:hover {
+            border-color: #8cffec;
+            box-shadow: 0 0 40px rgba(140, 255, 236, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .upload-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .upload-subtitle {
+            font-size: 1.05rem;
+            color: #a0a0b0;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: rgba(140, 255, 236, 0.1);
+            border: 2px solid #8cffec;
+            border-radius: 14px;
+            color: #8cffec;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: rgba(140, 255, 236, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(140, 255, 236, 0.2);
+        }
+
+        .file-name {
+            margin-top: 1.2rem;
+            font-size: 0.95rem;
+            color: #8cffec;
+            font-weight: 500;
+            min-height: 24px;
+        }
+
+        .analyze-btn {
+            padding: 1.2rem 3.5rem;
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            pointer-events: none;
+            margin-top: 1rem;
+        }
+
+        .analyze-btn.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .analyze-btn.enabled:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(140, 255, 236, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .upload-container {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .upload-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Simplytics</div>
+            <div class="tagline">Transform the spreadshetts into Insights</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="upload-container">
+            <div class="upload-icon">📊</div>
+            <h1 class="upload-title">Upload Your Dataset</h1>
+            <p class="upload-subtitle">
+                Upload a CSV or Excel file to unlock AI-powered business insights,<br>
+                trend analysis, and actionable recommendations
+            </p>
+            
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" />
+                <label for="fileInput" class="file-input-label">
+                    📁 Choose File
+                </label>
+                <div id="fileName" class="file-name"></div>
+            </div>
+
+            <button id="analyzeBtn" class="analyze-btn">
+                ⚡ Analyze Dataset
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                fileName.textContent = `✓ ${file.name} selected`;
+                analyzeBtn.classList.add('enabled');
+                
+                // Store filename in memory for the session
+                const fileData = {
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadTime: new Date().toISOString()
+                };
+                
+                // Store in variable (not localStorage)
+                window.uploadedFile = fileData;
+            } else {
+                fileName.textContent = '';
+                analyzeBtn.classList.remove('enabled');
+            }
+        });
+
+        analyzeBtn.addEventListener('click', function() {
+            if (!fileInput.files.length) return;
+            
+            // Navigate to processing page
+            window.location.href = 'processing.html';
+        });
+    </script>
+</body>
+</html>

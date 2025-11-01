@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraWise - Analyzing Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(44, 44, 75, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(140, 255, 236, 0.15);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8cffec, #5ad4e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: #8cffec;
+            opacity: 0.7;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            padding: 2rem;
+        }
+
+        .loading-container {
+            text-align: center;
+            max-width: 700px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spinner-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border: 5px solid rgba(140, 255, 236, 0.1);
+            border-top: 5px solid #8cffec;
+            border-right: 5px solid #8cffec;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .loading-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .loading-status {
+            font-size: 1.1rem;
+            color: #8cffec;
+            margin-bottom: 2.5rem;
+            min-height: 28px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .progress-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(140, 255, 236, 0.1);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8cffec, #5ad4e6);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(140, 255, 236, 0.5);
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #a0a0b0;
+            margin-top: 0.5rem;
+        }
+
+        .progress-details {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(44, 44, 75, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(140, 255, 236, 0.1);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(140, 255, 236, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #a0a0b0;
+        }
+
+        .detail-value {
+            color: #8cffec;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .loading-title {
+                font-size: 1.8rem;
+            }
+
+            .progress-details {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">AuraWise</div>
+            <div class="tagline">Automated Business Insights Platform</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="loading-container">
+            <div class="spinner-wrapper">
+                <div class="spinner"></div>
+                <div class="spinner-center">🔬</div>
+            </div>
+            <h2 class="loading-title">Analyzing Your Data</h2>
+            <p id="loadingStatus" class="loading-status">Initializing analysis engine...</p>
+            
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">0% Complete</p>
+
+            <div class="progress-details">
+                <div class="detail-item">
+                    <span class="detail-label">Rows Processed:</span>
+                    <span class="detail-value" id="rowsProcessed">0 / 12,847</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">KPIs Calculated:</span>
+                    <span class="detail-value" id="kpisCalculated">0 / 12</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Insights Generated:</span>
+                    <span class="detail-value" id="insightsGenerated">0 / 5</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Time Remaining:</span>
+                    <span class="detail-value" id="timeRemaining">~20 seconds</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loadingStatuses = [
+            { text: 'Reading dataset structure...', time: 0, rows: 0, kpis: 0, insights: 0 },
+            { text: 'Validating data integrity...', time: 2000, rows: 2000, kpis: 0, insights: 0 },
+            { text: 'Cleaning and preprocessing data...', time: 4500, rows: 5500, kpis: 2, insights: 0 },
+            { text: 'Calculating revenue metrics...', time: 7000, rows: 7800, kpis: 5, insights: 0 },
+            { text: 'Analyzing customer segments...', time: 9500, rows: 9200, kpis: 7, insights: 1 },
+            { text: 'Detecting seasonal patterns...', time: 12000, rows: 10800, kpis: 9, insights: 2 },
+            { text: 'Identifying growth opportunities...', time: 14500, rows: 11900, kpis: 11, insights: 3 },
+            { text: 'Running predictive models...', time: 17000, rows: 12500, kpis: 12, insights: 4 },
+            { text: 'Compiling insights report...', time: 19000, rows: 12847, kpis: 12, insights: 5 }
+        ];
+
+        function startAnalysis() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const loadingStatus = document.getElementById('loadingStatus');
+            const rowsProcessed = document.getElementById('rowsProcessed');
+            const kpisCalculated = document.getElementById('kpisCalculated');
+            const insightsGenerated = document.getElementById('insightsGenerated');
+            const timeRemaining = document.getElementById('timeRemaining');
+            
+            let progress = 0;
+            const totalDuration = 20000; // 20 seconds
+            const updateInterval = 100; // Update every 100ms
+            const progressStep = (updateInterval / totalDuration) * 100;
+            
+            // Update progress bar and time
+            const progressInterval = setInterval(() => {
+                progress += progressStep;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                }
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '% Complete';
+                
+                // Update time remaining
+                const remaining = Math.ceil((100 - progress) / 100 * 20);
+                if (remaining > 0) {
+                    timeRemaining.textContent = `~${remaining} seconds`;
+                } else {
+                    timeRemaining.textContent = 'Finalizing...';
+                }
+            }, updateInterval);
+            
+            // Update status messages and details
+            loadingStatuses.forEach(status => {
+                setTimeout(() => {
+                    loadingStatus.textContent = status.text;
+                    rowsProcessed.textContent = `${status.rows.toLocaleString()} / 12,847`;
+                    kpisCalculated.textContent = `${status.kpis} / 12`;
+                    insightsGenerated.textContent = `${status.insights} / 5`;
+                }, status.time);
+            });
+            
+            // Redirect to results page after 20 seconds
+            setTimeout(() => {
+                window.location.href = 'results.html';
+            }, totalDuration);
+        }
+
+        // Start analysis when page loads
+        window.addEventListener('DOMContentLoaded', startAnalysis);
+    </script>
+</body>
+</html>
